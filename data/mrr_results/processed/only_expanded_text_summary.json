@@ -1,0 +1,18 @@
+{
+    "Dataset": "only_expanded_text",
+    "Embedding": "only expanded text",
+    "Note": "-",
+    "Total Queries": 100,
+    "Avg MRR@1": 0.9,
+    "Max MRR@1": 1.0,
+    "Min MRR@1": 0.0,
+    "Avg MRR@3": 0.9333333333333332,
+    "Max MRR@3": 1.0,
+    "Min MRR@3": 0.0,
+    "Avg MRR@5": 0.9333333333333332,
+    "Max MRR@5": 1.0,
+    "Min MRR@5": 0.0,
+    "Avg MRR@10": 0.9333333333333332,
+    "Max MRR@10": 1.0,
+    "Min MRR@10": 0.0
+}
