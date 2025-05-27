@@ -52,17 +52,17 @@ def test_sparse_embedding_list():
         print(f"Sparse embedding: {embedding}")
 
 
-# ทดสอบการเชื่อมต่อกับ Qdrant
+# Test connection to Qdrant
 def test_qdrant_connection():
     try:
-        # ตรวจสอบการเชื่อมต่อ
+        # Check connection
         qdrant_client.get_collections()
         print("Qdrant connection is successful.")
     except Exception as e:
         print(f"Error connecting to Qdrant: {e}")
 
 
-# ทดสอบการเพิ่มข้อมูลลงใน Qdrant
+# Test adding data to Qdrant
 def test_insert_documents():
     embedding = dense_embedding(example_documents[2])
     add_embedding(
@@ -73,14 +73,14 @@ def test_insert_documents():
     )
 
 
-# ทดสอบการดึงข้อมูลทั้งหมดจาก Qdrant
+# Test retrieving all data from Qdrant
 def test_get_all_embedding():
     print(f"All embeddings in {constants.TEST_COLLECTION_NAME}:")
     data = get_all_embedding(constants.TEST_COLLECTION_NAME)
     print(data)
 
 
-# ทดสอบการค้นหาความคล้ายคลึง (Similarity search)
+# Test similarity search
 def test_similarity_search():
     query = "How to request vacation leave?"
     query_vector = dense_embedding(query)
@@ -90,8 +90,8 @@ def test_similarity_search():
     print(search_result)
 
 
-# ทดสอบการสร้างเนื้อหาจาก LLM
-# โดยใช้ Google Gemini
+# Test content generation from LLM
+# Using Google Gemini
 def test_llm():
     query = "Who is Albert Einstein"
     response = gemini_generate_content(query)

@@ -4,24 +4,24 @@ from uuid import uuid4
 
 import src.constants.constants as constants
 
-# สร้าง client เชื่อมต่อไปยัง Qdrant server ที่รันผ่าน Docker
+# Create client to connect to Qdrant server running through Docker
 qdrant_client = QdrantClient(host=constants.QDRANT_HOST, port=constants.QDRANT_PORT)
 
 
 def generate_id():
-    # สร้าง ID สำหรับ Qdrant
-    # ID จะต้องไม่ซ้ำกันใน collection
-    # สามารถใช้ UUID หรือ hash function เพื่อสร้าง ID ที่ไม่ซ้ำกัน
+    # Generate ID for Qdrant
+    # ID must be unique in collection
+    # Can use UUID or hash function to create unique ID
     return str(uuid4())
 
 
-# ฟังก์ชันสำหรับสร้าง collection ใน Qdrant
+# Function to create collection in Qdrant
 def create_collection(collection_name: str):
     try:
-        # ตรวจสอบว่า collection มีอยู่แล้วหรือไม่
+        # Check if collection already exists
         qdrant_client.get_collection(collection_name=collection_name)
     except Exception:
-        # ถ้าไม่มี collection ให้สร้างใหม่
+        # If collection doesn't exist, create new one
         qdrant_client.create_collection(
             collection_name=collection_name,
             vectors_config=models.VectorParams(
@@ -31,21 +31,21 @@ def create_collection(collection_name: str):
         )
 
 
-# ฟังก์ชันสำหรับลบ collection ใน Qdrant
+# Function to delete collection in Qdrant
 def delete_collection(collection_name: str):
     try:
-        # ตรวจสอบว่า collection มีอยู่แล้วหรือไม่
+        # Check if collection already exists
         qdrant_client.get_collection(collection_name=collection_name)
-        # ถ้ามีให้ลบ collection
+        # If exists, delete collection
         qdrant_client.delete_collection(collection_name=collection_name)
     except Exception:
-        # ถ้าไม่มี collection ไม่ต้องทำอะไร
+        # If collection doesn't exist, do nothing
         pass
 
 
-# ฟังก์ชันสำหรับอัปโหลด ข้อขวามที่ถูก embedding แล้วไปยัง Qdrant
-# เราจะเก็บข้อความต้นฉบับ metadata และ embedding vector ไว้ด้วยกัน
-# เพื่อให้สามามารถนำข้อมูลไปใช้ได้ในอนาคต
+# Function to upload embedded text to Qdrant
+# We will store original text, metadata, and embedding vector together
+# So that the data can be used in the future
 def add_embedding(
     collection_name: str,
     vector: list,
@@ -53,10 +53,10 @@ def add_embedding(
     expanded_text: str,
     metadata: dict,
 ):
-    # สร้าง collection ถ้ายังไม่มี
+    # Create collection if it doesn't exist yet
     create_collection(collection_name)
 
-    # เพิ่มข้อมูลลง Qdrant
+    # Add data to Qdrant
     qdrant_client.upsert(
         collection_name=collection_name,
         points=[
@@ -75,26 +75,26 @@ def add_embedding(
 
 def get_all_embedding(collection_name: str, limit: int = 10):
     try:
-        # ตรวจสอบว่า collection มีอยู่แล้วหรือไม่
+        # Check if collection already exists
         qdrant_client.get_collection(collection_name=collection_name)
-        # ถ้ามีให้ดึงข้อมูลทั้งหมด
+        # If exists, retrieve all data
         response = qdrant_client.scroll(
             collection_name=collection_name,
             limit=limit,
         )
         return response
     except Exception as e:
-        # ถ้าไม่มี collection ไม่ต้องทำอะไร
+        # If collection doesn't exist, do nothing
         print(f"Error getting data from Qdrant: {e}")
         return []
 
 
 def similarity_search(collection_name: str, query_vector: list, limit: int = 10):
     try:
-        # ตรวจสอบว่า collection มีอยู่แล้วหรือไม่
+        # Check if collection already exists
         qdrant_client.get_collection(collection_name=collection_name)
 
-        # ถ้ามีให้ค้นหาข้อมูลที่คล้ายกัน
+        # If exists, search for similar data
         response = qdrant_client.search(
             collection_name=collection_name,
             query_vector=query_vector,
@@ -104,6 +104,6 @@ def similarity_search(collection_name: str, query_vector: list, limit: int = 10)
         )
         return response
     except Exception as e:
-        # ถ้าไม่มี collection ไม่ต้องทำอะไร
+        # If collection doesn't exist, do nothing
         print(f"Error searching data in Qdrant: {e}")
         return []

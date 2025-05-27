@@ -1,25 +1,25 @@
 from fastembed.embedding import TextEmbedding
 
-# สร้างตัว encoder (สามารถระบุชื่อโมเดลที่ต้องการใช้)
+# Create encoder (you can specify the model name you want to use)
 embedding_model: TextEmbedding = TextEmbedding(model_name="BAAI/bge-small-en-v1.5")
 
-# รายการข้อความตัวอย่าง
+# Sample text list
 documents = [
     "How to request vacation leave?",
     "Company leave policy explained.",
     "Guide to submitting a leave request form.",
 ]
 
-# แปลงข้อความเป็น dense embedding
+# Convert text to dense embedding
 embeddings = list(embedding_model.embed(documents))
 
-# แสดงผลลัพธ์
+# Display results
 for i, doc in enumerate(documents):
     print(f"Document {i}: {doc}")
     print(f"Embedding: {embeddings[i][:5]}")
     print()
 
-# ตัวอย่าง output (5 ค่าแรกของ embedding)
+# Example output (first 5 values of embedding)
 # Document 0: How to request vacation leave?
 # Embedding: [-0.03820893 -0.02452314  0.00697538 -0.05776384  0.0553261, ...]
 
